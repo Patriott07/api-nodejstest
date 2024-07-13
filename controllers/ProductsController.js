@@ -4,14 +4,13 @@ import path from "path";
 import fs from "fs";
 
 export const getProducts = async (req, res) => {
-
-   try {
+    try {
         const product = await Products.find();
-        res.status(200).json({products : product});
-   } catch (error) {
+        res.status(200).json({ products: product });
+    } catch (error) {
         console.log(error);
-   }
-   
+    }
+
 }
 
 export const detailProduct = async (req, res) => {
@@ -33,18 +32,23 @@ export const detailProduct = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
-    console.log(req.body.files, req.file, req.files);
-    if (req.files) {
-        const file = req.files.file;
+    try {
+        // console.log('ini logs awal create: ', req.files, req.body);
+        if (req.files) {
+            const file = req.files.file;
 
-        const result = await handleFileUpload(req, res, file);
-        console.log(result);
-        req.body.image = result.newNameFile;
-        req.body.url = result.url;
+            const result = await handleFileUpload(req, res, file);
+            console.log(result);
+            req.body.image = result.newNameFile;
+            req.body.url = result.url;
 
+        }
+        const products = await Products.create(req.body);
+        res.status(200).json(products);
+        console.log('ini logs akhir create:', products);
+    } catch (error) {
+        console.log(error);
     }
-    const products = await Products.create(req.body);
-    res.status(200).json(products);
 }
 
 export const updateProduct = async (req, res) => {
@@ -87,7 +91,7 @@ export const deleteProduct = async (req, res) => {
         }
 
         const product = await Products.findById(req.params.id);
-        if(!product){
+        if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
         await product.deleteOne();

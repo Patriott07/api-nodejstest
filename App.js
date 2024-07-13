@@ -22,11 +22,7 @@ app.use(fileupload());
 app.use(ProductRoute);
 // routes END
 
-
-mongoose.connect(env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
+mongoose.connect('mongodb+srv://pwangtampn:r3CLsw128RFD6UIz@flutterstore.xuggelu.mongodb.net/flutterstore?retryWrites=true&w=majority').then(() => {
     console.log('Connected to MongoDB');
 }).catch((err) => {
     console.log(err);
@@ -35,4 +31,6 @@ mongoose.connect(env.MONGO_URL, {
 app.listen(env.PORT, () => {
     console.log('Server is running on port localhost:5510');
 });
+
+export default app;
 
